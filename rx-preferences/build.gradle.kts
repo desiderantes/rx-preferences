@@ -10,12 +10,14 @@ android {
     buildToolsVersion = Versions.buildToolsVersion
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = Versions.javaVersion
         targetCompatibility = Versions.javaVersion
     }
 
     defaultConfig {
         minSdkVersion(Versions.minSdkVersion)
+        multiDexEnabled = true
     }
 
     lintOptions {
@@ -35,6 +37,7 @@ fun getStringProperty(propertyName: String) : String? {
 }
 
 dependencies {
+    coreLibraryDesugaring(Deps.desugaring)
     implementation(Deps.annotations)
     api(Deps.rxjava3)
 

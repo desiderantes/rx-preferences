@@ -246,7 +246,7 @@ public class RxSharedPreferencesTest {
             assertThat(e).hasMessage("key == null");
         }
         try {
-            rxPreferences.getStringSet(null, Collections.<String>emptySet());
+            rxPreferences.getStringSet(null, Collections.emptySet());
             fail();
         } catch (NullPointerException e) {
             assertThat(e).hasMessage("key == null");

@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import static com.desiderantes.rx.preferences3.Preconditions.checkNotNull;
+import java.util.Objects;
 
 final class ConverterAdapter<T> implements RealPreference.Adapter<T> {
     private final Preference.Converter<T> converter;
@@ -21,14 +21,14 @@ final class ConverterAdapter<T> implements RealPreference.Adapter<T> {
         if (serialized == null) return defaultValue;
 
         T value = converter.deserialize(serialized);
-        checkNotNull(value, "Deserialized value must not be null from string: " + serialized);
+        Objects.requireNonNull(value, "Deserialized value must not be null from string: " + serialized);
         return value;
     }
 
     @Override
     public void set(@NonNull String key, @NonNull T value, @NonNull SharedPreferences.Editor editor) {
         String serialized = converter.serialize(value);
-        checkNotNull(serialized, "Serialized string must not be null from value: " + value);
+        Objects.requireNonNull(serialized, "Serialized string must not be null from value: " + value);
         editor.putString(key, serialized);
     }
 }

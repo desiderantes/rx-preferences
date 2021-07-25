@@ -5,12 +5,10 @@ import android.content.SharedPreferences;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.functions.Predicate;
-
-import static com.desiderantes.rx.preferences3.Preconditions.checkNotNull;
 
 final class RealPreference<T> implements Preference<T> {
     private final SharedPreferences preferences;
@@ -18,6 +16,7 @@ final class RealPreference<T> implements Preference<T> {
     private final T defaultValue;
     private final Adapter<T> adapter;
     private final Observable<T> values;
+
     RealPreference(SharedPreferences preferences, final String key, final T defaultValue,
                    Adapter<T> adapter, Observable<String> keyChanges) {
         this.preferences = preferences;
@@ -25,21 +24,13 @@ final class RealPreference<T> implements Preference<T> {
         this.defaultValue = defaultValue;
         this.adapter = adapter;
         this.values = keyChanges //
-                .filter(new Predicate<String>() {
-                    @Override
-                    public boolean test(String changedKey) {
-                        return key.equals(changedKey);
-                    }
-                }) //
+                .filter(key::equals) //
                 .startWithItem("<init>") // Dummy value to trigger initial load.
-                .map(new Function<String, T>() {
-                    @Override
-                    public T apply(String s) {
-                        if (s.equals(RxSharedPreferences.NULL_KEY_EMISSION)) {
-                            return defaultValue;
-                        } else {
-                            return get();
-                        }
+                .map(s -> {
+                    if (s.equals(RxSharedPreferences.NULL_KEY_EMISSION)) {
+                        return defaultValue;
+                    } else {
+                        return get();
                     }
                 });
     }
@@ -64,10 +55,18 @@ final class RealPreference<T> implements Preference<T> {
 
     @Override
     public void set(@NonNull T value) {
-        checkNotNull(value, "value == null");
+        Objects.requireNonNull(value, "value == null");
         SharedPreferences.Editor editor = preferences.edit();
         adapter.set(key, value, editor);
         editor.apply();
+    }
+
+    @Override
+    public boolean setSync(@NonNull T value) {
+        Objects.requireNonNull(value, "value == null");
+        SharedPreferences.Editor editor = preferences.edit();
+        adapter.set(key, value, editor);
+        return editor.commit();
     }
 
     @Override
@@ -91,12 +90,7 @@ final class RealPreference<T> implements Preference<T> {
     @CheckResult
     @NonNull
     public Consumer<? super T> asConsumer() {
-        return new Consumer<T>() {
-            @Override
-            public void accept(T value) {
-                set(value);
-            }
-        };
+        return (Consumer<T>) this::set;
     }
 
     /**

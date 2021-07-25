@@ -1,16 +1,14 @@
 package com.desiderantes.rx.preferences3;
 
-import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
 import java.util.Set;
 
-import static android.os.Build.VERSION_CODES.HONEYCOMB;
 import static java.util.Collections.unmodifiableSet;
 
-@TargetApi(HONEYCOMB)
+
 final class StringSetAdapter implements RealPreference.Adapter<Set<String>> {
     static final StringSetAdapter INSTANCE = new StringSetAdapter();
 

@@ -7,8 +7,8 @@ android {
     buildToolsVersion = Versions.buildToolsVersion
 
     compileOptions {
-        sourceCompatibility = Versions.java8Version
-        targetCompatibility = Versions.java8Version
+        sourceCompatibility = Versions.javaVersion
+        targetCompatibility = Versions.javaVersion
     }
 
     buildFeatures {

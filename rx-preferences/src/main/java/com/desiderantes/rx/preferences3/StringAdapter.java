@@ -11,7 +11,6 @@ final class StringAdapter implements RealPreference.Adapter<String> {
     @Override
     public String get(@NonNull String key, @NonNull SharedPreferences preferences,
                       @NonNull String defaultValue) {
-        //noinspection ConstantConditions
         return preferences.getString(key, defaultValue);
     }
 

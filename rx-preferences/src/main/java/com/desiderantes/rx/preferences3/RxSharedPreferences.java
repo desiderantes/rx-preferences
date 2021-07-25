@@ -5,18 +5,13 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.functions.Cancellable;
-
-import static android.os.Build.VERSION_CODES.HONEYCOMB;
-import static com.desiderantes.rx.preferences3.Preconditions.checkNotNull;
 
 /**
  * A factory for reactive {@link Preference} objects.
@@ -32,29 +27,18 @@ public final class RxSharedPreferences {
     private final Observable<String> keyChanges;
     private RxSharedPreferences(final SharedPreferences preferences) {
         this.preferences = preferences;
-        this.keyChanges = Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(@NonNull final ObservableEmitter<String> emitter) {
-                final OnSharedPreferenceChangeListener listener = new OnSharedPreferenceChangeListener() {
-                    @Override
-                    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-                        if (key == null) {
-                            emitter.onNext(NULL_KEY_EMISSION);
-                        } else {
-                            emitter.onNext(key);
-                        }
-                    }
-                };
+        this.keyChanges = Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            final OnSharedPreferenceChangeListener listener = (preferences1, key) -> {
+                if (key == null) {
+                    emitter.onNext(NULL_KEY_EMISSION);
+                } else {
+                    emitter.onNext(key);
+                }
+            };
 
-                emitter.setCancellable(new Cancellable() {
-                    @Override
-                    public void cancel() {
-                        preferences.unregisterOnSharedPreferenceChangeListener(listener);
-                    }
-                });
+            emitter.setCancellable(() -> preferences.unregisterOnSharedPreferenceChangeListener(listener));
 
-                preferences.registerOnSharedPreferenceChangeListener(listener);
-            }
+            preferences.registerOnSharedPreferenceChangeListener(listener);
         }).share();
     }
 
@@ -64,7 +48,7 @@ public final class RxSharedPreferences {
     @CheckResult
     @NonNull
     public static RxSharedPreferences create(@NonNull SharedPreferences preferences) {
-        checkNotNull(preferences, "preferences == null");
+        Objects.requireNonNull(preferences, "preferences == null");
         return new RxSharedPreferences(preferences);
     }
 
@@ -83,8 +67,8 @@ public final class RxSharedPreferences {
     @CheckResult
     @NonNull
     public Preference<Boolean> getBoolean(@NonNull String key, @NonNull Boolean defaultValue) {
-        checkNotNull(key, "key == null");
-        checkNotNull(defaultValue, "defaultValue == null");
+        Objects.requireNonNull(key, "key == null");
+        Objects.requireNonNull(defaultValue, "defaultValue == null");
         return new RealPreference<>(preferences, key, defaultValue, BooleanAdapter.INSTANCE, keyChanges);
     }
 
@@ -95,9 +79,9 @@ public final class RxSharedPreferences {
     @NonNull
     public <T extends Enum<T>> Preference<T> getEnum(@NonNull String key, @NonNull T defaultValue,
                                                      @NonNull Class<T> enumClass) {
-        checkNotNull(key, "key == null");
-        checkNotNull(defaultValue, "defaultValue == null");
-        checkNotNull(enumClass, "enumClass == null");
+        Objects.requireNonNull(key, "key == null");
+        Objects.requireNonNull(defaultValue, "defaultValue == null");
+        Objects.requireNonNull(enumClass, "enumClass == null");
         return new RealPreference<>(preferences, key, defaultValue, new EnumAdapter<>(enumClass), keyChanges);
     }
 
@@ -116,8 +100,8 @@ public final class RxSharedPreferences {
     @CheckResult
     @NonNull
     public Preference<Float> getFloat(@NonNull String key, @NonNull Float defaultValue) {
-        checkNotNull(key, "key == null");
-        checkNotNull(defaultValue, "defaultValue == null");
+        Objects.requireNonNull(key, "key == null");
+        Objects.requireNonNull(defaultValue, "defaultValue == null");
         return new RealPreference<>(preferences, key, defaultValue, FloatAdapter.INSTANCE, keyChanges);
     }
 
@@ -136,8 +120,8 @@ public final class RxSharedPreferences {
     @CheckResult
     @NonNull
     public Preference<Integer> getInteger(@NonNull String key, @NonNull Integer defaultValue) {
-        checkNotNull(key, "key == null");
-        checkNotNull(defaultValue, "defaultValue == null");
+        Objects.requireNonNull(key, "key == null");
+        Objects.requireNonNull(defaultValue, "defaultValue == null");
         return new RealPreference<>(preferences, key, defaultValue, IntegerAdapter.INSTANCE, keyChanges);
     }
 
@@ -156,8 +140,8 @@ public final class RxSharedPreferences {
     @CheckResult
     @NonNull
     public Preference<Long> getLong(@NonNull String key, @NonNull Long defaultValue) {
-        checkNotNull(key, "key == null");
-        checkNotNull(defaultValue, "defaultValue == null");
+        Objects.requireNonNull(key, "key == null");
+        Objects.requireNonNull(defaultValue, "defaultValue == null");
         return new RealPreference<>(preferences, key, defaultValue, LongAdapter.INSTANCE, keyChanges);
     }
 
@@ -168,9 +152,9 @@ public final class RxSharedPreferences {
     @NonNull
     public <T> Preference<T> getObject(@NonNull String key,
                                        @NonNull T defaultValue, @NonNull Preference.Converter<T> converter) {
-        checkNotNull(key, "key == null");
-        checkNotNull(defaultValue, "defaultValue == null");
-        checkNotNull(converter, "converter == null");
+        Objects.requireNonNull(key, "key == null");
+        Objects.requireNonNull(defaultValue, "defaultValue == null");
+        Objects.requireNonNull(converter, "converter == null");
         return new RealPreference<>(preferences, key, defaultValue,
                 new ConverterAdapter<>(converter), keyChanges);
     }
@@ -190,8 +174,8 @@ public final class RxSharedPreferences {
     @CheckResult
     @NonNull
     public Preference<String> getString(@NonNull String key, @NonNull String defaultValue) {
-        checkNotNull(key, "key == null");
-        checkNotNull(defaultValue, "defaultValue == null");
+        Objects.requireNonNull(key, "key == null");
+        Objects.requireNonNull(defaultValue, "defaultValue == null");
         return new RealPreference<>(preferences, key, defaultValue, StringAdapter.INSTANCE, keyChanges);
     }
 
@@ -199,23 +183,21 @@ public final class RxSharedPreferences {
      * Create a string set preference for {@code key}. Default is an empty set. Note that returned set
      * value will always be unmodifiable.
      */
-    @RequiresApi(HONEYCOMB)
     @CheckResult
     @NonNull
     public Preference<Set<String>> getStringSet(@NonNull String key) {
-        return getStringSet(key, Collections.<String>emptySet());
+        return getStringSet(key, Collections.emptySet());
     }
 
     /**
      * Create a string set preference for {@code key} with a default of {@code defaultValue}.
      */
-    @RequiresApi(HONEYCOMB)
     @CheckResult
     @NonNull
     public Preference<Set<String>> getStringSet(@NonNull String key,
                                                 @NonNull Set<String> defaultValue) {
-        checkNotNull(key, "key == null");
-        checkNotNull(defaultValue, "defaultValue == null");
+        Objects.requireNonNull(key, "key == null");
+        Objects.requireNonNull(defaultValue, "defaultValue == null");
         return new RealPreference<>(preferences, key, defaultValue, StringSetAdapter.INSTANCE, keyChanges);
     }
 

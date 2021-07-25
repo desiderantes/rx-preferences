@@ -8,6 +8,8 @@ Version 3.0.0-SNAPSHOT *(TBD)*
  * Migrate Gradle script to Kotlin DSL
  * Remove Butterknife dep in tests
  * Migrate to maven-publish plugin
+ * Add InMemoryPreference class to aid in testing
+ * Raise min SDK version to 14
 
 
 Version 2.0.1 *(18-09-2020)*

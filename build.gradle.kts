@@ -6,12 +6,12 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:4.2.1")
+        classpath("com.android.tools.build:gradle:4.2.2")
     }
 }
 
 plugins {
-    id("net.ltgt.errorprone") version "1.2.1"
+    id("net.ltgt.errorprone") version "2.0.1"
 }
 
 allprojects {

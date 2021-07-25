@@ -14,6 +14,11 @@ SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(co
 RxSharedPreferences rxPreferences = RxSharedPreferences.create(preferences);
 ```
 
+```kotlin
+val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+val rxpreferences = RxSharedPreferences.create(preferences)
+```
+
 *Hint: Keep a strong reference on your `RxSharedPreferences` instance for as long as you want to observe them to prevent listeners from being GCed.*
 
 Create individual `Preference` objects:
@@ -21,6 +26,11 @@ Create individual `Preference` objects:
 ```java
 Preference<String> username = rxPreferences.getString("username");
 Preference<Boolean> showWhatsNew = rxPreferences.getBoolean("show-whats-new", true);
+```
+
+```kotlin
+val username = rxPreferences.getString("username")
+val shoWhatsNew = rxPreferences.getBoolean("show-whats-new", true)
 ```
 
 Observe changes to individual preferences:
@@ -33,6 +43,12 @@ username.asObservable().subscribe(new Action1<String>() {
 }
 ```
 
+```kotlin
+username.asObservable.subscribe { usernameStr ->
+    Log.d(TAG, "Username: $usernameStr")
+}
+```
+
 Subscribe preferences to streams to store values:
 
 ```java
@@ -40,6 +56,15 @@ RxCompoundButton.checks(showWhatsNewView)
     .subscribe(showWhatsNew.asConsumer());
 ```
 *(Note: `RxCompoundButton` is from [RxBinding][1])*
+
+Test your preferences with Memory Storage:
+
+```java
+Preference<String> stringPref = InMemoryPreference.getStringPreference("string-pref");
+stringPref.setSync("New Value");
+
+assertThat(stringPref.isSet()).isTrue();
+```
 
 
 Download

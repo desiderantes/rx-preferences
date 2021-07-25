@@ -131,6 +131,34 @@ public class PreferenceTest {
         assertThat(preferences.getString("foo8", null)).isEqualTo("1,2");
     }
 
+    public void setSync (){
+        boolean result;
+        result = rxPreferences.getBoolean("foo1").setSync(false);
+        assertThat(result).isTrue();
+        assertThat(preferences.getBoolean("foo1", true)).isFalse();
+        result = rxPreferences.getEnum("foo2", PAPER, Roshambo.class).setSync(ROCK);
+        assertThat(result).isTrue();
+        assertThat(preferences.getString("foo2", null)).isEqualTo("ROCK");
+        result = rxPreferences.getFloat("foo3").setSync(1f);
+        assertThat(result).isTrue();
+        assertThat(preferences.getFloat("foo3", 0f)).isEqualTo(1f);
+        result = rxPreferences.getInteger("foo4").setSync(1);
+        assertThat(result).isTrue();
+        assertThat(preferences.getInt("foo4", 0)).isEqualTo(1);
+        result = rxPreferences.getLong("foo5").setSync(1L);
+        assertThat(result).isTrue();
+        assertThat(preferences.getLong("foo5", 0L)).isEqualTo(1L);
+        result = rxPreferences.getString("foo6").setSync("bar");
+        assertThat(result).isTrue();
+        assertThat(preferences.getString("foo6", null)).isEqualTo("bar");
+        result = rxPreferences.getStringSet("foo7").setSync(singleton("bar"));
+        assertThat(result).isTrue();
+        assertThat(preferences.getStringSet("foo7", null)).isEqualTo(singleton("bar"));
+        result = rxPreferences.getObject("foo8", new Point(2, 3), pointConverter).setSync(new Point(1, 2));
+        assertThat(result).isTrue();
+        assertThat(preferences.getString("foo8", null)).isEqualTo("1,2");
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Test
     public void setNullThrows() {
@@ -185,6 +213,66 @@ public class PreferenceTest {
 
         try {
             rxPreferences.getObject("foo8", new Point(1, 2), pointConverter).set(null);
+            fail("Disallow setting null.");
+        } catch (NullPointerException e) {
+            assertThat(e).hasMessage("value == null");
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void setSyncNullThrows() {
+        try {
+            rxPreferences.getBoolean("foo1").setSync(null);
+            fail("Disallow setting null.");
+        } catch (NullPointerException e) {
+            assertThat(e).hasMessage("value == null");
+        }
+
+        try {
+            rxPreferences.getEnum("foo2", ROCK, Roshambo.class).setSync(null);
+            fail("Disallow setting null.");
+        } catch (NullPointerException e) {
+            assertThat(e).hasMessage("value == null");
+        }
+
+        try {
+            rxPreferences.getFloat("foo3").setSync(null);
+            fail("Disallow setting null.");
+        } catch (NullPointerException e) {
+            assertThat(e).hasMessage("value == null");
+        }
+
+        try {
+            rxPreferences.getInteger("foo4").setSync(null);
+            fail("Disallow setting null.");
+        } catch (NullPointerException e) {
+            assertThat(e).hasMessage("value == null");
+        }
+
+        try {
+            rxPreferences.getLong("foo5").setSync(null);
+            fail("Disallow setting null.");
+        } catch (NullPointerException e) {
+            assertThat(e).hasMessage("value == null");
+        }
+
+        try {
+            rxPreferences.getString("foo6").setSync(null);
+            fail("Disallow setting null.");
+        } catch (NullPointerException e) {
+            assertThat(e).hasMessage("value == null");
+        }
+
+        try {
+            rxPreferences.getStringSet("foo7").setSync(null);
+            fail("Disallow setting null.");
+        } catch (NullPointerException e) {
+            assertThat(e).hasMessage("value == null");
+        }
+
+        try {
+            rxPreferences.getObject("foo8", new Point(1, 2), pointConverter).setSync(null);
             fail("Disallow setting null.");
         } catch (NullPointerException e) {
             assertThat(e).hasMessage("value == null");
@@ -265,7 +353,7 @@ public class PreferenceTest {
     @Test
     public void stringSetIsUnmodifiable() {
         Preference<Set<String>> preference = rxPreferences.getStringSet("foo");
-        preference.set(new LinkedHashSet<String>());
+        preference.set(new LinkedHashSet<>());
         Set<String> stringSet = preference.get();
         try {
             stringSet.add("");
