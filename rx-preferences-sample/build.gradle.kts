@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Versions.compileSdkVersion)
+    compileSdk = Versions.compileSdkVersion
     buildToolsVersion = Versions.buildToolsVersion
 
     compileOptions {
@@ -18,16 +18,16 @@ android {
 
     defaultConfig {
         applicationId = "com.desiderantes.rx.preferences.sample"
-        minSdkVersion(Versions.minSdkVersion) // rxBinding has a minimum of 14
-        targetSdkVersion(Versions.targetSdkVersion)
+        minSdk = Versions.minSdkVersion // rxBinding has a minimum of 14
+        targetSdk = Versions.targetSdkVersion
         versionCode = 1
         versionName = "1.0.0"
     }
 
-    lintOptions {
+    lint {
         textReport = true
         textOutput("stdout")
-        isIgnoreWarnings = true
+        isIgnoreWarnings = false
     }
 }
 

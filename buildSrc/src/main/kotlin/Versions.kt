@@ -5,5 +5,5 @@ object Versions {
     const val targetSdkVersion = 30
     const val compileSdkVersion = 30
     const val buildToolsVersion = "30.0.2"
-    val javaVersion = JavaVersion.VERSION_1_8
+    val javaVersion = JavaVersion.VERSION_11
 }

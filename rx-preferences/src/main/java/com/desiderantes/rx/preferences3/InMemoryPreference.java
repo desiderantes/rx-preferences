@@ -83,6 +83,7 @@ public class InMemoryPreference<T> implements Preference<T> {
     public static Preference<String> getStringPreference(String key, @NonNull String defaultValue) {
         return new InMemoryPreference<>(key, defaultValue);
     }
+
     public static Preference<Boolean> getBooleanPreference(String key, boolean defaultValue) {
         return new InMemoryPreference<>(key, defaultValue);
     }
@@ -104,7 +105,7 @@ public class InMemoryPreference<T> implements Preference<T> {
     }
 
     public static <E extends Enum<E>> Preference<E> getEnumPreference(String key, E defaultValue, Class<E> enumClass) {
-        return new Preference<E>() {
+        return new Preference<>() {
             private final InMemoryPreference<String> realPreference = new InMemoryPreference<>(key, defaultValue.name());
 
             @NonNull
@@ -131,7 +132,7 @@ public class InMemoryPreference<T> implements Preference<T> {
             }
 
             @Override
-            public boolean setSync(@NonNull  E value) {
+            public boolean setSync(@NonNull E value) {
                 return realPreference.setSync(value.name());
             }
 

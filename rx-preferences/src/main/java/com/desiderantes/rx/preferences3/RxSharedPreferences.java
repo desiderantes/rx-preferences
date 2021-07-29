@@ -25,16 +25,11 @@ public final class RxSharedPreferences {
     private static final String DEFAULT_STRING = "";
     private final SharedPreferences preferences;
     private final Observable<String> keyChanges;
+
     private RxSharedPreferences(final SharedPreferences preferences) {
         this.preferences = preferences;
         this.keyChanges = Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            final OnSharedPreferenceChangeListener listener = (preferences1, key) -> {
-                if (key == null) {
-                    emitter.onNext(NULL_KEY_EMISSION);
-                } else {
-                    emitter.onNext(key);
-                }
-            };
+            final OnSharedPreferenceChangeListener listener = (preferences1, key) -> emitter.onNext(Objects.requireNonNullElse(key, NULL_KEY_EMISSION));
 
             emitter.setCancellable(() -> preferences.unregisterOnSharedPreferenceChangeListener(listener));
 
