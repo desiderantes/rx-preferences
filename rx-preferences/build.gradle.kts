@@ -6,7 +6,7 @@ plugins {
 
 
 android {
-    compileSdkVersion(Versions.compileSdkVersion)
+    compileSdk = Versions.compileSdkVersion
     buildToolsVersion = Versions.buildToolsVersion
 
     compileOptions {
@@ -16,25 +16,24 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion(Versions.minSdkVersion)
+        minSdk = Versions.minSdkVersion
         multiDexEnabled = true
     }
 
-    lintOptions {
+    lint {
         textReport = true
         textOutput("stdout")
     }
+}
+
+fun getStringProperty(propertyName: String) : String? {
+    return project.findProperty(propertyName) as String? ?: System.getenv(propertyName)
 }
 
 fun isReleaseBuild(): Boolean {
     return (project.findProperty("VERSION_NAME") as String?)?.contains("SNAPSHOT")?.not() ?: false
 }
 
-
-
-fun getStringProperty(propertyName: String) : String? {
-    return project.findProperty(propertyName) as String?
-}
 
 dependencies {
     coreLibraryDesugaring(Deps.desugaring)
@@ -59,8 +58,8 @@ afterEvaluate {
                 url = uri("https://maven.pkg.github.com/desiderantes/rx-preferences")
                 credentials {
                     username =
-                        getStringProperty("REGISTRY_USERNAME") ?: System.getenv("REGISTRY_USERNAME")
-                    password = getStringProperty("REGISTRY_TOKEN") ?: System.getenv("REGISTRY_TOKEN")
+                        getStringProperty("REGISTRY_USERNAME")!!
+                    password = getStringProperty("REGISTRY_TOKEN")!!
                 }
             }
         }

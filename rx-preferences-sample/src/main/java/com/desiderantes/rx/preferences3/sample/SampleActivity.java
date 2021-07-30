@@ -75,7 +75,7 @@ public class SampleActivity extends Activity {
             .subscribe(editText::setText));
     disposables.add(RxTextView.textChangeEvents(editText)
             .skip(1) // First emission is the original state.
-            .debounce(500, TimeUnit.MILLISECONDS) // Filter out UI events that are emitted in quick succession.
+            .debounce(300, TimeUnit.MILLISECONDS) // Filter out UI events that are emitted in quick succession.
             .map(e -> e.getText().toString())
             .subscribe(preference.asConsumer()));
   }
