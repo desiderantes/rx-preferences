@@ -71,9 +71,9 @@ Download
 --------
 
 ```groovy
-implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.1'
+implementation 'com.desiderantes.rx.preferences3:rx-preferences:3.0.0-SNAPSHOT'
 ```
-
+The package is available in the Package registry from this Github repository
 
 License
 -------
