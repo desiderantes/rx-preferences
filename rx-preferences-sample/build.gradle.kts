@@ -26,9 +26,9 @@ android {
 
     lint {
         textReport = true
-        textOutput("stdout")
-        isIgnoreWarnings = false
+        ignoreWarnings = false
     }
+    namespace = "com.desiderantes.rx.preferences3.sample"
 }
 
 dependencies {
