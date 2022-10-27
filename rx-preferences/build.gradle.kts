@@ -22,17 +22,11 @@ android {
 
     lint {
         textReport = true
-        textOutput("stdout")
     }
+    namespace = "com.desiderantes.rx.preferences3"
 }
 
-fun getStringProperty(propertyName: String) : String? {
-    return project.findProperty(propertyName) as String? ?: System.getenv(propertyName)
-}
 
-fun isReleaseBuild(): Boolean {
-    return (project.findProperty("VERSION_NAME") as String?)?.contains("SNAPSHOT")?.not() ?: false
-}
 
 
 dependencies {
@@ -57,8 +51,7 @@ afterEvaluate {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/desiderantes/rx-preferences")
                 credentials {
-                    username =
-                        getStringProperty("REGISTRY_USERNAME")!!
+                    username = getStringProperty("REGISTRY_USERNAME")!!
                     password = getStringProperty("REGISTRY_TOKEN")!!
                 }
             }

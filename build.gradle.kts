@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0")
+        classpath("com.android.tools.build:gradle:7.3.1")
     }
 }
 
@@ -22,4 +22,3 @@ allprojects {
     group = project.property("GROUP") as String
     version = project.property("VERSION_NAME") as String
 }
-
