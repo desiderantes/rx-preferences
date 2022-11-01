@@ -73,12 +73,16 @@ Download
 ```groovy
 implementation 'com.desiderantes.rx.preferences3:rx-preferences:3.0.0-SNAPSHOT'
 ```
+```kotlin
+implementation("com.desiderantes.rx.preferences3:rx-preferences:3.0.0-SNAPSHOT")
+```
 The package is available in the Package registry from this Github repository
 
 License
 -------
 
     Copyright 2014 Prateek Srivastava
+              2021 - Mario Daniel Ruiz Saavedra
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
